@@ -20,6 +20,9 @@ class Composition(models.Model):
   food = models.ForeignKey(Food)
   ammount = models.IntegerField(default = 0)
 
+  class Meta:
+    unique_together = ('nutrition', 'food',)
+
 class Store(models.Model):
   name = models.CharField(max_length = 64)
 

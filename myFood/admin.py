@@ -5,5 +5,5 @@ from .views import NutritionAdmin, FoodAdmin
 
 admin.site.register(Store)
 admin.site.register(Food, FoodAdmin)
-admin.site.register(Nutrition, NutritionAdmin) 
+admin.site.register(Nutrition, NutritionAdmin)
 
