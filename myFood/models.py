@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib import admin
 
 class Nutrition(models.Model):
   name = models.CharField(max_length = 64)
@@ -24,4 +25,8 @@ class Store(models.Model):
 
   def __str__(self):
     return self.name
+
+class CompositionInline(admin.TabularInline):
+  model = Composition
+  extra = 1
 
