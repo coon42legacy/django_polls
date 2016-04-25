@@ -17,13 +17,13 @@ class FoodDataBaseTests(TestCase):
     n1.save()
     n2.save()
     
-    c = Composition(food=f, nutrition=n1, ammount=20)
+    c = Composition(food=f, nutrition=n1, ammount_per_100g=20)
     c.save()
 
-    c = Composition(food=f, nutrition=n2, ammount=20)
+    c = Composition(food=f, nutrition=n2, ammount_per_100g=20)
     c.save()
 
-    c = Composition(food=f, nutrition=n1, ammount=20)
+    c = Composition(food=f, nutrition=n1, ammount_per_100g=20)
     with self.assertRaises(IntegrityError):
       c.save()
 

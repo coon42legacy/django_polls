@@ -18,7 +18,7 @@ class Food(models.Model):
 class Composition(models.Model):
   nutrition = models.ForeignKey(Nutrition)
   food = models.ForeignKey(Food)
-  ammount = models.IntegerField(default = 0)
+  ammount_per_100g = models.IntegerField(default = 0)
 
   class Meta:
     unique_together = ('nutrition', 'food',)
