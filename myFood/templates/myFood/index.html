@@ -1,0 +1,22 @@
+{% extends "myFood/base.html" %}
+
+<H1>Meals eaten today:</H1>
+
+{% block content %}
+{% if meals_list %}
+  <ul>
+    {% for meal in meals_list %}
+    <li>
+        {{ meal.food.name }}
+        ({{ meal.ammount|default:"N/A" }} x {{ meal.packages.container_types.name }}) @
+        carbs: {{ meal.carbs|default:"N/A" }}
+        protein: {{ meal.protein|default:"N/A" }}
+        fat: {{ meal.fat|default:"N/A" }}
+        kcal: {{ meal.kcal|default:"N/A" }}
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No meals are available.</p>
+{% endif %}
+{% endblock %}

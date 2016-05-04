@@ -10,9 +10,10 @@ class ContainerType(models.Model):
 
 class Nutrition(models.Model):
   name = models.CharField(max_length = 64)
+  calories_per_g = models.FloatField(default = 0)
 
   def __str__(self):
-    return self.name
+    return "%s (%.1f kcal / g)" % (self.name, self.calories_per_g)
 
 class Food(models.Model):
   name = models.CharField(max_length = 64)
@@ -44,13 +45,17 @@ class Packages(models.Model):
   class Meta:
     unique_together = ('container_types', 'food')
 
+  def __str__(self):
+    return "%s (%d)" % (self.container_types.name, self.ammount_units)
+
 class PackagesInline(admin.TabularInline):
   model = Packages
   extra = 1
 
 class Meal(models.Model):
+  date = models.DateField()
   food = models.ForeignKey(Food)
-  container_type = models.ForeignKey(ContainerType)
+  packages = models.ForeignKey(Packages)
   ammount = models.FloatField(default = 1)
 
   def __str__(self):
