@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.db.models import Sum
 
 def Index(request):
-  meals_list = Meal.objects.all()
+  meals_list = Meal.objects.all().filter(date = timezone.now())
 
   for meal in meals_list:
     kcal_total = 0

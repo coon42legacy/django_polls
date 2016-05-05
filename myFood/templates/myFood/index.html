@@ -3,9 +3,8 @@
 {% block content %}
 <H1>Meals eaten today:</H1>
 
-<table border="1">
-
 {% if meals_list %}
+<table border="1">
   <tr>
     <td>Name</td>
     <td>Package</td>
@@ -21,7 +20,7 @@
       <td>{{ meal.ammount }} x {{ meal.packages.container_types.name }}</td>
         <td>{{ meal.kcal_fat|default:"N/A" }}</td>
         <td>{{ meal.kcal_carbs|default:"N/A" }}</td>
-        <td>{{ meal.kcal_proteins|default:"N/A" }}</td>
+        <td>{{ meal.kcal_protein|default:"N/A" }}</td>
         <td>{{ meal.kcal_alcohol|default:"N/A" }}</td>
         <td>{{ meal.kcal_total}}</td>
     </tr>
