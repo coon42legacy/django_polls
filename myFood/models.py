@@ -28,10 +28,13 @@ class Food(models.Model):
 class Composition(models.Model):
   nutrition = models.ForeignKey(Nutrition)
   food = models.ForeignKey(Food)
-  ammount_per_100_units = models.IntegerField(default = 0)
+  ammount_per_100_units = models.FloatField(default = 0)
 
   class Meta:
     unique_together = ('nutrition', 'food',)
+
+  def __str__(self):
+    return "%s (%dg)" % (self.nutrition.name, self.ammount_per_100_units)
 
 class CompositionInline(admin.TabularInline):
   model = Composition

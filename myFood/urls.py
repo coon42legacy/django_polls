@@ -4,6 +4,6 @@ from . import views
 
 app_name = 'myFood'
 urlpatterns = [
-  url(r'^$', views.IndexView.as_view(), name='index'),
+  url(r'^$', views.Index, name='index'),
 ]
 

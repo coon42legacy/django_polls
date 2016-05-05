@@ -6,12 +6,26 @@ from django.views import generic
 from django.utils import timezone
 from django.db.models import Sum
 
-class IndexView(generic.ListView):
-  template_name = 'myFood/index.html'
-  context_object_name = 'meals_list'
+def Index(request):
+  meals_list = Meal.objects.all()
 
-  def get_queryset(self):
-    return Meal.objects.annotate(Sum('ammount'))
+  for meal in meals_list:
+    kcal_total = 0
+
+    for c in meal.food.composition_set.all():
+      kcal = meal.ammount * c.nutrition.calories_per_g * \
+        c.ammount_per_100_units * meal.packages.ammount_units / 100.0
+
+      kcal_total += kcal
+      setattr(meal, "kcal_" + c.nutrition.name, int(kcal))
+
+    meal.kcal_total = int(kcal_total)
+
+  context = {
+    'meals_list': meals_list,
+  }
+
+  return render(request, 'myFood/index.html', context)
 
 class NutritionAdmin(admin.ModelAdmin):
   inlines = (CompositionInline,)

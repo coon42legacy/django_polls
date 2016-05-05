@@ -1,22 +1,45 @@
 {% extends "myFood/base.html" %}
 
+{% block content %}
 <H1>Meals eaten today:</H1>
 
-{% block content %}
+<table border="1">
+
 {% if meals_list %}
-  <ul>
+  <tr>
+    <td>Name</td>
+    <td>Package</td>
+    <td>Fat</td>
+    <td>Carbs</td>
+    <td>Protein</td>
+    <td>Alcohol</td>
+    <td>Total</td>
+  </tr>
     {% for meal in meals_list %}
-    <li>
-        {{ meal.food.name }}
-        ({{ meal.ammount|default:"N/A" }} x {{ meal.packages.container_types.name }}) @
-        carbs: {{ meal.carbs|default:"N/A" }}
-        protein: {{ meal.protein|default:"N/A" }}
-        fat: {{ meal.fat|default:"N/A" }}
-        kcal: {{ meal.kcal|default:"N/A" }}
-    </li>
+    <tr>
+      <td>{{ meal.food.name }}</td>
+      <td>{{ meal.ammount }} x {{ meal.packages.container_types.name }}</td>
+        <td>{{ meal.kcal_fat|default:"N/A" }}</td>
+        <td>{{ meal.kcal_carbs|default:"N/A" }}</td>
+        <td>{{ meal.kcal_proteins|default:"N/A" }}</td>
+        <td>{{ meal.kcal_alcohol|default:"N/A" }}</td>
+        <td>{{ meal.kcal_total}}</td>
+    </tr>
     {% endfor %}
   </ul>
 {% else %}
   <p>No meals are available.</p>
 {% endif %}
-{% endblock %}
+{% endblock content %}
+
+  <tr>
+    <td>Jill</td>
+    <td>Smith</td> 
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td> 
+    <td>94</td>
+  </tr>
+</table>
