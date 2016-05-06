@@ -18,7 +18,7 @@ class Nutrition(models.Model):
 class Food(models.Model):
   name = models.CharField(max_length = 64)
   nutritions = models.ManyToManyField(Nutrition, through='Composition')
-  ean_code = models.CharField(max_length = 13, blank = True, default = None)
+  ean_code = models.CharField(max_length = 13, blank = True, null = True, default = None)
   is_fluid = models.BooleanField(default = False)
   container_types = models.ManyToManyField(ContainerType, through='Packages')
 
@@ -61,8 +61,21 @@ class Meal(models.Model):
   packages = models.ForeignKey(Packages)
   ammount = models.FloatField(default = 1)
 
+  def kcals_of_nutritions(self):
+    kcals_meal = {}
+
+    for c in self.food.composition_set.all():
+      kcals_meal[c.nutrition.name] = int(self.ammount * c.nutrition.calories_per_g * \
+      c.ammount_per_100_units * self.packages.ammount_units / 100.0)
+
+    return kcals_meal
+
+  def kcal_total(self):
+    return sum([kcals for kcals in self.kcals_of_nutritions().values()])
+
   def __str__(self):
-    return "%s @ %d kCals" % (self.food.name, 200)
+    return "%s: %s @ %d kCals" % (self.date.isoformat(), self.food.name,
+            self.kcal_total())
 
 class Store(models.Model):
   name = models.CharField(max_length = 64)
