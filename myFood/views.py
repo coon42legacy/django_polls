@@ -10,16 +10,8 @@ def Index(request):
   meals_list = Meal.objects.all().filter(date = timezone.now())
 
   for meal in meals_list:
-    kcal_total = 0
-
-    for c in meal.food.composition_set.all():
-      kcal = meal.ammount * c.nutrition.calories_per_g * \
-        c.ammount_per_100_units * meal.packages.ammount_units / 100.0
-
-      kcal_total += kcal
-      setattr(meal, "kcal_" + c.nutrition.name, int(kcal))
-
-    meal.kcal_total = int(kcal_total)
+    for nutrition, ammount in meal.kcals_of_nutritions().items():
+      setattr(meal, "kcal_" + nutrition, ammount)
 
   context = {
     'meals_list': meals_list,

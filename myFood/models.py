@@ -65,8 +65,13 @@ class Meal(models.Model):
     kcals_meal = {}
 
     for c in self.food.composition_set.all():
-      kcals_meal[c.nutrition.name] = int(self.ammount * c.nutrition.calories_per_g * \
-      c.ammount_per_100_units * self.packages.ammount_units / 100.0)
+      kcals_meal[c.nutrition.name] = int((
+          self.ammount *                  \
+          self.packages.ammount_units *   \
+          c.nutrition.calories_per_g *    \
+          c.ammount_per_100_units) /      \
+          100.0                           \
+      )
 
     return kcals_meal
 
