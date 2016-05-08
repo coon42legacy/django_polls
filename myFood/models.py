@@ -3,20 +3,20 @@ from django.utils import timezone
 from django.contrib import admin
 
 class ContainerType(models.Model):
-  name = models.CharField(max_length = 64)
+  name = models.CharField(max_length = 64, unique = True)
 
   def __str__(self):
     return self.name
 
 class Nutrition(models.Model):
-  name = models.CharField(max_length = 64)
+  name = models.CharField(max_length = 64, unique = True)
   calories_per_g = models.FloatField(default = 0)
 
   def __str__(self):
     return "%s (%.1f kcal / g)" % (self.name, self.calories_per_g)
 
 class Food(models.Model):
-  name = models.CharField(max_length = 64)
+  name = models.CharField(max_length = 64, unique = True)
   nutritions = models.ManyToManyField(Nutrition, through='Composition')
   ean_code = models.CharField(max_length = 13, blank = True, null = True, default = None)
   is_fluid = models.BooleanField(default = False)
