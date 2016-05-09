@@ -8,19 +8,20 @@ from django.utils import timezone
 def Index(request):
   meals_list = Meal.objects.all().filter(date = timezone.now())
   nutrition_names = [n.name for n in Nutrition.objects.all()]
+  var_prefix = "kcal_"
 
   for nutrition in nutrition_names:
-    setattr(meals_list, "kcal_" + nutrition, 0)
+    setattr(meals_list, var_prefix + nutrition, 0)
 
   for meal in meals_list:
     for nutrition in nutrition_names:
-      setattr(meal, "kcal_" + nutrition, "N/A")
+      setattr(meal, var_prefix + nutrition, "N/A")
 
     for nutrition, ammount in meal.kcals_of_nutritions().items():
-      setattr(meal, "kcal_" + nutrition, ammount)
-      setattr(meals_list, "kcal_" + nutrition, getattr(meals_list, "kcal_" + nutrition) + ammount)
+      setattr(meal, var_prefix + nutrition, ammount)
+      setattr(meals_list, var_prefix + nutrition, getattr(meals_list, var_prefix + nutrition) + ammount)
 
-  meals_list.kcal_total = sum([getattr(meals_list, "kcal_" + n) for n in nutrition_names])
+  meals_list.kcal_total = sum([getattr(meals_list, var_prefix + n) for n in nutrition_names])
 
   context = {
     'meals_list': meals_list,
