@@ -15,11 +15,19 @@ class Nutrition(models.Model):
   def __str__(self):
     return "%s (%.1f kcal / g)" % (self.name, self.calories_per_g)
 
+class Manufacturer(models.Model):
+  name = models.CharField(max_length = 64)
+
+  def __str__(self):
+    return "%s" % self.name
+
 class Food(models.Model):
   name = models.CharField(max_length = 64, unique = True)
+  manufacturer = models.ForeignKey(Manufacturer, null = True, blank = True)
   nutritions = models.ManyToManyField(Nutrition, through='Composition')
   ean_code = models.CharField(max_length = 13, blank = True, null = True, default = None)
   is_fluid = models.BooleanField(default = False)
+  nutritions_veryfied = models.BooleanField(default = False)
   container_types = models.ManyToManyField(ContainerType, through='Packages')
 
   def __str__(self):
