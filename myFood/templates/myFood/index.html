@@ -1,7 +1,40 @@
 {% extends "myFood/base.html" %}
+{% block head %}
+<script type="text/javascript">
+window.onload = function () {
+    var chart = new CanvasJS.Chart("chartContainer",
+    {
+        title:{
+            text: "Nutrition distribution"
+        },
+        legend: {
+            maxWidth: 350,
+            itemWidth: 120
+        },
+        data: [
+        {
+            type: "pie",
+            showInLegend: true,
+            legendText: "{indexLabel}",
+            indexLabel: "{legendText}: {g}g ({y} %)",
+            dataPoints: [
+              {% for k, v in meals_list.percent.items %} 
+                {% if v %}
+                  { y: {{ v }}, g: "-",legendText: "{{ k }}" },
+                {% endif %}
+              {% endfor %}
+            ]
+        }
+        ]
+    });
+    chart.render();
+}
+</script>
+
+{% endblock head %}
 
 {% block content %}
-<H1>Meals eaten today:</H1>
+<h1>Meals eaten today:</h1>
 
 {% if meals_list %}
 <table border="1">
@@ -18,25 +51,32 @@
   <tr>
     <td>{{ meal.food.name }}</td>
     <td>{{ meal.ammount }} x {{ meal.packages.container_types.name }}</td>
-    <td>{{ meal.kcal_fat }}</td>
-    <td>{{ meal.kcal_carbs }}</td>
-    <td>{{ meal.kcal_protein }}</td>
-    <td>{{ meal.kcal_alcohol }}</td>
-    <td>{{ meal.kcal_total }}</td>
+    <td>{{ meal.kcal.fat }}</td>
+    <td>{{ meal.kcal.carbs }}</td>
+    <td>{{ meal.kcal.protein }}</td>
+    <td>{{ meal.kcal.alcohol }}</td>
+    <td>{{ meal.kcal.total }}</td>
   </tr>
   {% endfor %}
   <tr>
     <td><b>Total</b></td>
     <td>-</td>
-    <td><b> {{ meals_list.kcal_fat }} </b></td>
-    <td><b> {{ meals_list.kcal_carbs }} </b></td>
-    <td><b> {{ meals_list.kcal_protein }} </b></td>
-    <td><b> {{ meals_list.kcal_alcohol }} </b></td>
-    <td><b> {{ meals_list.kcal_total }} </b></td>
+    <td><b> {{ meals_list.kcal.fat }} </b></td>
+    <td><b> {{ meals_list.kcal.carbs }} </b></td>
+    <td><b> {{ meals_list.kcal.protein }} </b></td>
+    <td><b> {{ meals_list.kcal.alcohol }} </b></td>
+    <td><b> {{ meals_list.kcal.total }} </b></td>
   <tr>
 </table>
 {% else %}
   <p>No meals are available.</p>
 {% endif %}
+
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
 {% endblock content %}
+
+{% block footer %}
+  <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+{% endblock footer %}
 

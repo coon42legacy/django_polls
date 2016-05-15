@@ -8,20 +8,40 @@ from django.utils import timezone
 def Index(request):
   meals_list = Meal.objects.all().filter(date = timezone.now())
   nutrition_names = [n.name for n in Nutrition.objects.all()]
-  var_prefix = "kcal_"
+  meals_list.kcal = {}
+  meals_list.percent = {}
+  meals_list.grams = {}
+
+  # TODO: replace following code with:
+  #  - calculate kcals
+  #  - calculate percents
+  #  - calculate grams
 
   for nutrition in nutrition_names:
-    setattr(meals_list, var_prefix + nutrition, 0)
+    meals_list.kcal[nutrition] = 0
+    meals_list.grams[nutrition] = 0
 
   for meal in meals_list:
+    meal.kcal = {}
+    meal.kcal["total"] = 0
+
     for nutrition in nutrition_names:
-      setattr(meal, var_prefix + nutrition, "N/A")
+      meal.kcal[nutrition] = "N/A"
 
     for nutrition, ammount in meal.kcals_of_nutritions().items():
-      setattr(meal, var_prefix + nutrition, ammount)
-      setattr(meals_list, var_prefix + nutrition, getattr(meals_list, var_prefix + nutrition) + ammount)
+      meal.kcal[nutrition] = ammount
+      meals_list.kcal[nutrition] += ammount
+      meal.kcal["total"] += ammount
 
-  meals_list.kcal_total = sum([getattr(meals_list, var_prefix + n) for n in nutrition_names])
+  meals_list.kcal["total"] = sum([meals_list.kcal[n] for n in nutrition_names])
+
+  for nutrition in Nutrition.objects.all():
+    kcal_total = meals_list.kcal[nutrition.name]
+    percent_total = kcal_total * 100 / meals_list.kcal["total"] if kcal_total > 0 else 0
+
+    if kcal_total:
+      meals_list.percent[nutrition.name] = "%.2f" % percent_total
+      meals_list.grams[nutrition.name] = "-" # TODO: replace by grams
 
   context = {
     'meals_list': meals_list,
