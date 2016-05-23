@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
+from datetime import datetime
 
 class ContainerType(models.Model):
   name = models.CharField(max_length = 64, unique = True)
@@ -31,7 +32,9 @@ class Food(models.Model):
   container_types = models.ManyToManyField(ContainerType, through='Packages')
 
   def __str__(self):
-    return self.name
+   mf = self.manufacturer
+
+   return "%s - (%s)" % (self.name, mf.name if mf is not None else "None")
 
 class Composition(models.Model):
   nutrition = models.ForeignKey(Nutrition)
@@ -64,7 +67,7 @@ class PackagesInline(admin.TabularInline):
   extra = 1
 
 class Meal(models.Model):
-  date = models.DateField()
+  date = models.DateField(default=datetime.now)
   food = models.ForeignKey(Food)
   packages = models.ForeignKey(Packages)
   ammount = models.FloatField(default = 1)
